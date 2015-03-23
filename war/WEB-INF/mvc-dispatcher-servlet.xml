@@ -1,0 +1,56 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+ 
+	<!-- 
+		Need DI a message into controller, so auto component scan is disabled, 
+		to avoid double create the movieController bean.
+                Only controller need this hack.
+	-->
+	<context:component-scan base-package="com.rest.appengine.resources">
+		<context:exclude-filter type="regex"
+			expression="com.rest.appengine.resources.Movie.*" />
+	</context:component-scan>
+     <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"
+          p:defaultContentType="application/json"
+          p:favorPathExtension="true"
+          p:useJaf="false">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="html" value="text/html"/>
+                <entry key="xls" value="application/vnd.ms-excel"/>
+                <entry key="csv" value="text/csv"/>
+            </map>
+        </property>
+    </bean>
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
+ 
+	<!-- Bean to show you Di in GAE, via Spring, also init the MovieController -->
+	<bean class="com.rest.appengine.resources.MovieController">
+		<property name="message">
+			<value>Hello World</value>
+		</property>
+	</bean>
+ 
+	<bean
+	   class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/pages/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+ 
+</beans>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>restaurant data</title>
+    <style>
+      table{
+         border: 0px solid grey;
+         border-collapse: collapse;
+         padding: 5px;
+      }
+      th , td {
+         border: 1px solid grey;
+         border-collapse: collapse;
+         padding: 5px;
+      }
+      table tr:nth-child(odd) {
+         background-color: #f2f2f2;
+      }
+      table tr:nth-child(even) {
+         background-color: #ffffff;
+      }
+    </style>
+    <script src="https://maps.google.com/maps/api/js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="http://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
+    
+  </head>
+
+  <body>
+    <h1>Restful on appengine using Spring, angular $http and angular ngMap</h1>
+    <h3>description</h3>
+	<ul>
+	   <li> filter by style will filter the markers on the map as well</li>
+	   <li> always sorted on rating</li>
+	   <li> click on marker to display restaurant information</li>
+	 </ul>
+	<p>GET respone in json: <a href="http://restfuldata.appspot.com/data/restaurants">json</a></p>
+	<p>source code on github</p>
+<!--     <table>
+      <tr>
+        <td colspan="2" style="font-weight:bold;">Servlets</td>        
+      </tr>
+      <tr>
+        <td><a href="restful">Restful</a></td>
+      </tr>
+    </table> -->
+    
+    <div ng-app="restaurants" ng-controller="restaurantController">
+     <span style="font-size:1.25em; font-weight:bold;">filter by type</span>: <input type="text" ng-model="search.style">
+     <br/><br/>
+     <table style="border:none;">
+       <tr style="background-color: #ffffff;">
+        <td style="vertical-align:top;border:0px;">
+          <table>
+             <tr>
+                <th>name</th>
+                <th>style</th>
+                <th>rating</th>
+             </tr>
+             <tr ng-repeat="restaurant in restaurants | filter:search | orderBy:'-rating'">
+                <td>{{restaurant.name}}</td>
+                <td>{{restaurant.style}}</td>
+                <td>{{restaurant.rating}}</td>
+             </tr>
+         </table>
+       </td>
+       <td style="border:0px;">
+          <map center="{{slc.lat}}, {{slc.lon}}" zoom="12" style="width:500px;height:380px;">
+            <div  ng-repeat="restaurant in (locations = (restaurants | filter:search | orderBy:'-rating'))">
+               <marker position="{{restaurant.lat}},{{restaurant.lon}}" on-click="showInfoWindow(event, 'res_{{restaurant.id}}')"></marker>
+               <info-window id="res_{{restaurant.id}}">
+                  <div>
+                     <h3>{{restaurant.name}}</h3>
+                     {{restaurant.phone}}<br>
+                     <div>{{restaurant.address}}</div>
+                  </div>
+               </info-window>
+            </div>
+          </map>
+        </td>
+       </tr>
+      </table>
+   </div>
+
+    
+    <script>
+      var app = angular.module("restaurants", ['ngMap']);
+      app.controller("restaurantController", function($scope, $http){
+    	  $scope.slc={lat:40.7500, lon:-111.8833};
+    	  $scope.restaurants=[];
+    	  var url = "http://restfuldata.appspot.com/data/restaurants";
+    	  $http.get(url).success(
+    			  function(response) {$scope.restaurants=response;});
+      });
+    </script>
+  </body>
+</html>
