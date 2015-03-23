@@ -14,6 +14,8 @@ public class DataController {
 	@RequestMapping(value="/restaurants", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public List<Restaurant> getRestaurants() {
+		//connecting to google spreatsheets requires service API key
+		//using in-memory data for now
         List<Restaurant> list = new ArrayList<Restaurant>();
         list.add(new Restaurant().setAddress("1435 S State St, Salt Lake City, UT 84115").setId(1).setName("Thai Siam Restaurant").setRating(4.0).setStyle("Thai").setLat(40.738932).setLon(-111.887755).setPhone("(801) 474-3322"));
         list.add(new Restaurant().setAddress("224 S 1300 E, Salt Lake City, UT 84102").setId(2).setRating(4.1).setName("Aristo's").setStyle("Greek").setLat(40.764176).setLon(-111.854324).setPhone("(801) 581-0888"));
@@ -27,6 +29,7 @@ public class DataController {
         list.add(new Restaurant().setAddress("317 S Main St, Salt Lake City, UT 84111").setId(10).setName("Eva").setRating(4.1).setStyle("Mediterranean").setLat(40.762309).setLon(-111.89078).setPhone("(xxx) xxx-xxxx"));
         list.add(new Restaurant().setAddress("55 W 100 S, Salt Lake City, UT 84101").setId(11).setName("Caffe Molise").setRating(4.4).setStyle("Italian").setLat(40.766918).setLon(-111.893006).setPhone("(xxx) xxx-xxxx"));
         list.add(new Restaurant().setAddress("151 S 500 E, Salt Lake City, UT 84102").setId(12).setName("Oasis Cafe").setRating(4.2).setStyle("American").setLat(40.765813).setLon(-111.87628).setPhone("(xxx) xxx-xxxx"));
+        
         return list;
 	}
  
